@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.gridsuite.realtime.notification.server;
+package org.gridsuite.rt.notification.server;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @author Mohamed Ben Rejeb <mohamed.benrejeb at rte-france.com>
  */
 @Configuration
-public class RealTimeNotificationWebSocketConfiguration {
+public class RtNotificationWebSocketConfiguration {
 
     @Bean
     public HandlerMapping webSocketHandlerMapping(WebSocketHandler webSocketHandler) {

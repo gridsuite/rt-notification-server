@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.gridsuite.realtime.notification.server;
+package org.gridsuite.rt.notification.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,9 +14,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 @SpringBootApplication
-public class RealTimeNotificationApplication {
+public class RtNotificationApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RealTimeNotificationApplication.class, args);
+        SpringApplication.run(RtNotificationApplication.class, args);
     }
 }
