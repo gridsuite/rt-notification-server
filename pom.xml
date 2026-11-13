@@ -18,7 +18,7 @@
     </parent>
 
     <groupId>org.gridsuite</groupId>
-    <artifactId>gridsuite-real-time-notification-server</artifactId>
+    <artifactId>gridsuite-rt-notification-server</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <packaging>jar</packaging>
@@ -27,9 +27,9 @@
     <url>http://www.gridsuite.org/</url>
 
     <scm>
-        <connection>scm:git:https://github.com/gridsuite/real-time-notification-server.git</connection>
-        <developerConnection>scm:git:https://github.com/gridsuite/real-time-notification-server.git</developerConnection>
-        <url>https://github.com/gridsuite/real-time-notification-server</url>
+        <connection>scm:git:https://github.com/gridsuite/rt-notification-server.git</connection>
+        <developerConnection>scm:git:https://github.com/gridsuite/rt-notification-server.git</developerConnection>
+        <url>https://github.com/gridsuite/rt-notification-server</url>
     </scm>
 
     <developers>
@@ -50,7 +50,7 @@
         <jib.from.image>powsybl/java:4.0.0</jib.from.image>
         <gridsuite-dependencies.version>51.1.0</gridsuite-dependencies.version>
         <sonar.organization>gridsuite</sonar.organization>
-        <sonar.projectKey>org.gridsuite:real-time-notification-server</sonar.projectKey>
+        <sonar.projectKey>org.gridsuite:rt-notification-server</sonar.projectKey>
     </properties>
 
     <build>
