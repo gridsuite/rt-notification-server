@@ -1,6 +1,6 @@
 spring:
   application:
-    name: real-time-notification-server
+    name: rt-notification-server
 
   cloud:
     function:

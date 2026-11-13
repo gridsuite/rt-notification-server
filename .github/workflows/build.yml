@@ -10,9 +10,9 @@ jobs:
   build:
     uses: powsybl/github-ci/.github/workflows/build-backend-app-generic.yml@c0849fd1236966d31e8f7167ec5beab4517bbf28
     with:
-      dockerImage: docker.io/gridsuite/real-time-notification-server
+      dockerImage: docker.io/gridsuite/rt-notification-server
       dockerUsername: gridsuiteci
-      eventType: real-time-notification_server_updated
+      eventType: rt-notification_server_updated
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

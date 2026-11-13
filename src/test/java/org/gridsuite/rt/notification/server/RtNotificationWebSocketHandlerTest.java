@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.gridsuite.realtime.notification.server;
+package org.gridsuite.rt.notification.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static org.gridsuite.realtime.notification.server.RealTimeNotificationWebSocketHandler.HEADER_EXECUTION_ID;
-import static org.gridsuite.realtime.notification.server.RealTimeNotificationWebSocketHandler.HEADER_UPDATE_TYPE;
+import static org.gridsuite.rt.notification.server.RtNotificationWebSocketHandler.HEADER_EXECUTION_ID;
+import static org.gridsuite.rt.notification.server.RtNotificationWebSocketHandler.HEADER_UPDATE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Mohamed Ben Rejeb <mohamed.benrejeb at rte-france.com>
  */
-class RealTimeNotificationWebSocketHandlerTest {
+class RtNotificationWebSocketHandlerTest {
 
     private static final String EMPTY_PAYLOAD = "";
 
@@ -70,7 +70,7 @@ class RealTimeNotificationWebSocketHandlerTest {
         return new GenericMessage<>(EMPTY_PAYLOAD, Map.of(HEADER_UPDATE_TYPE, updateType, HEADER_EXECUTION_ID, executionId, "ignored", "value"));
     }
 
-    private static FluxSink<Message<String>> connectBroker(RealTimeNotificationWebSocketHandler handler) {
+    private static FluxSink<Message<String>> connectBroker(RtNotificationWebSocketHandler handler) {
         AtomicReference<FluxSink<Message<String>>> sinkReference = new AtomicReference<>();
         handler.executionNotifications().accept(Flux.create(sinkReference::set));
         return sinkReference.get();
@@ -78,7 +78,7 @@ class RealTimeNotificationWebSocketHandlerTest {
 
     @Test
     void testShouldSerializeNotificationWithSupportedHeadersOnly() throws Exception {
-        RealTimeNotificationWebSocketHandler handler = new RealTimeNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
+        RtNotificationWebSocketHandler handler = new RtNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
         FluxSink<Message<String>> broker = connectBroker(handler);
         WebSocketSession session = mockSession("test-session");
         handler.handle(session);
@@ -100,7 +100,7 @@ class RealTimeNotificationWebSocketHandlerTest {
 
     @Test
     void testShouldEmitHeartbeatMessages() {
-        RealTimeNotificationWebSocketHandler handler = new RealTimeNotificationWebSocketHandler(objectMapper, 1, 10);
+        RtNotificationWebSocketHandler handler = new RtNotificationWebSocketHandler(objectMapper, 1, 10);
         handler.executionNotifications().accept(Flux.empty());
         WebSocketSession session = mockSession("test-session");
         handler.handle(session);
@@ -118,7 +118,7 @@ class RealTimeNotificationWebSocketHandlerTest {
         List<WebSocketMessage> receivedMessages = new ArrayList<>();
         when(session.receive()).thenReturn(Flux.just(textMessage, binaryMessage).doOnNext(receivedMessages::add));
 
-        RealTimeNotificationWebSocketHandler handler = new RealTimeNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
+        RtNotificationWebSocketHandler handler = new RtNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
         handler.executionNotifications().accept(Flux.empty());
         handler.handle(session).block(Duration.ofSeconds(1));
 
@@ -129,7 +129,7 @@ class RealTimeNotificationWebSocketHandlerTest {
 
     @Test
     void testShouldNotReplayMessagesSentIfNoClientSubscribed() {
-        RealTimeNotificationWebSocketHandler handler = new RealTimeNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
+        RtNotificationWebSocketHandler handler = new RtNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
         FluxSink<Message<String>> broker = connectBroker(handler);
 
         broker.next(notification("EXECUTION_CREATED", "discarded")); // discarded, no client connected

@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.gridsuite.realtime.notification.server;
+package org.gridsuite.rt.notification.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,12 +44,12 @@ import java.util.logging.Level;
  * @author Mohamed Ben Rejeb <mohamed.benrejeb at rte-france.com>
  */
 @Component
-public class RealTimeNotificationWebSocketHandler implements WebSocketHandler {
+public class RtNotificationWebSocketHandler implements WebSocketHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RealTimeNotificationWebSocketHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RtNotificationWebSocketHandler.class);
 
-    private static final String CATEGORY_BROKER_INPUT = RealTimeNotificationWebSocketHandler.class.getName() + ".messages.input-broker";
-    private static final String CATEGORY_WS_OUTPUT = RealTimeNotificationWebSocketHandler.class.getName() + ".messages.output-websocket";
+    private static final String CATEGORY_BROKER_INPUT = RtNotificationWebSocketHandler.class.getName() + ".messages.input-broker";
+    private static final String CATEGORY_WS_OUTPUT = RtNotificationWebSocketHandler.class.getName() + ".messages.output-websocket";
 
     static final String HEADER_UPDATE_TYPE = "updateType";
     static final String HEADER_EXECUTION_ID = "executionId";
@@ -62,7 +62,7 @@ public class RealTimeNotificationWebSocketHandler implements WebSocketHandler {
 
     private final Sinks.Many<Message<String>> sink = Sinks.many().multicast().directBestEffort();
 
-    public RealTimeNotificationWebSocketHandler(ObjectMapper jacksonObjectMapper,
+    public RtNotificationWebSocketHandler(ObjectMapper jacksonObjectMapper,
                                                 @Value("${notification.websocket.heartbeat.interval:30}") int heartbeatInterval,
                                                 @Value("${notification.websocket.session-buffer-size:1000}") int sessionBufferSize) {
         this.jacksonObjectMapper = jacksonObjectMapper;
@@ -88,7 +88,7 @@ public class RealTimeNotificationWebSocketHandler implements WebSocketHandler {
      */
     private Flux<WebSocketMessage> notificationFlux(WebSocketSession webSocketSession) {
         return sink.asFlux()
-                .filter(RealTimeNotificationWebSocketHandler::isValid)
+                .filter(RtNotificationWebSocketHandler::isValid)
                 .map(this::toJson)
                 .onBackpressureBuffer(sessionBufferSize, dropped -> closeSlowSession(webSocketSession))
                 .log(CATEGORY_WS_OUTPUT, Level.FINE)
@@ -117,7 +117,7 @@ public class RealTimeNotificationWebSocketHandler implements WebSocketHandler {
                             HEADER_UPDATE_TYPE, Objects.toString(headers.get(HEADER_UPDATE_TYPE)),
                             HEADER_EXECUTION_ID, Objects.toString(headers.get(HEADER_EXECUTION_ID)))));
         } catch (JsonProcessingException e) {
-            throw new RealTimeNotificationServerRuntimeException("Unable to serialize execution notification", e);
+            throw new RtNotificationServerRuntimeException("Unable to serialize execution notification", e);
         }
     }
 

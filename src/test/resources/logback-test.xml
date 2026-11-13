@@ -38,6 +38,6 @@
     <!--
         our logs
     -->
-    <logger name="org.gridsuite.realtime.notification.server" level="DEBUG"/>
+    <logger name="org.gridsuite.rt.notification.server" level="DEBUG"/>
 
 </configuration>

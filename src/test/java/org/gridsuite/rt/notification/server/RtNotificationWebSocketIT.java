@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.gridsuite.realtime.notification.server;
+package org.gridsuite.rt.notification.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +19,9 @@ import java.net.URI;
 /**
  * @author Mohamed Ben Rejeb <mohamed.benrejeb at rte-france.com>
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {RealTimeNotificationApplication.class})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {RtNotificationApplication.class})
 @DirtiesContext
-class RealTimeNotificationWebSocketIT {
+class RtNotificationWebSocketIT {
 
     @LocalServerPort
     private String port;
