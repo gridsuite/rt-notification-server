@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+import static org.gridsuite.rt.notification.server.RtNotificationWebSocketHandler.HEADER_ERROR;
 import static org.gridsuite.rt.notification.server.RtNotificationWebSocketHandler.HEADER_EXECUTION_ID;
 import static org.gridsuite.rt.notification.server.RtNotificationWebSocketHandler.HEADER_UPDATE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -96,6 +97,26 @@ class RtNotificationWebSocketHandlerTest {
         assertInstanceOf(Map.class, payload.get("headers"));
         assertEquals(Map.of(HEADER_UPDATE_TYPE, "EXECUTION_UPDATED", HEADER_EXECUTION_ID, "exec-id"), payload.get("headers"));
         assertEquals(1, payload.size());
+    }
+
+    @Test
+    void testShouldSerializeErrorHeader() throws Exception {
+        RtNotificationWebSocketHandler handler = new RtNotificationWebSocketHandler(objectMapper, Integer.MAX_VALUE, 10);
+        FluxSink<Message<String>> broker = connectBroker(handler);
+        WebSocketSession session = mockSession("test-session");
+        handler.handle(session);
+
+        List<String> messages = new ArrayList<>();
+        Disposable subscription = captureOutboundMessages(session).map(WebSocketMessage::getPayloadAsText).subscribe(messages::add);
+
+        broker.next(new GenericMessage<>(EMPTY_PAYLOAD, Map.of(HEADER_UPDATE_TYPE, "EXECUTION_FAILED", HEADER_EXECUTION_ID, "exec-id", HEADER_ERROR, "error message")));
+
+        assertEquals(1, messages.size());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> payload = objectMapper.readValue(messages.get(0), Map.class);
+        subscription.dispose();
+
+        assertEquals(Map.of(HEADER_UPDATE_TYPE, "EXECUTION_FAILED", HEADER_EXECUTION_ID, "exec-id", HEADER_ERROR, "error message"), payload.get("headers"));
     }
 
     @Test

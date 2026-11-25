@@ -25,6 +25,7 @@ import reactor.core.publisher.Sinks;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -53,6 +54,7 @@ public class RtNotificationWebSocketHandler implements WebSocketHandler {
 
     static final String HEADER_UPDATE_TYPE = "updateType";
     static final String HEADER_EXECUTION_ID = "executionId";
+    static final String HEADER_ERROR = "error";
 
     private final ObjectMapper jacksonObjectMapper;
 
@@ -111,11 +113,14 @@ public class RtNotificationWebSocketHandler implements WebSocketHandler {
 
     private String toJson(Message<String> message) {
         MessageHeaders headers = message.getHeaders();
+        Map<String, String> resHeaders = new HashMap<>();
+        resHeaders.put(HEADER_UPDATE_TYPE, Objects.toString(headers.get(HEADER_UPDATE_TYPE)));
+        resHeaders.put(HEADER_EXECUTION_ID, Objects.toString(headers.get(HEADER_EXECUTION_ID)));
+        if (headers.get(HEADER_ERROR) != null) {
+            resHeaders.put(HEADER_ERROR, Objects.toString(headers.get(HEADER_ERROR)));
+        }
         try {
-            return jacksonObjectMapper.writeValueAsString(Map.of(
-                    "headers", Map.of(
-                            HEADER_UPDATE_TYPE, Objects.toString(headers.get(HEADER_UPDATE_TYPE)),
-                            HEADER_EXECUTION_ID, Objects.toString(headers.get(HEADER_EXECUTION_ID)))));
+            return jacksonObjectMapper.writeValueAsString(Map.of("headers", resHeaders));
         } catch (JsonProcessingException e) {
             throw new RtNotificationServerRuntimeException("Unable to serialize execution notification", e);
         }
