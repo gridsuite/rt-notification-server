@@ -32,14 +32,15 @@ mvn install -DskipTests -Dpowsybl.docker.install
 
 ## RabbitMQ messages
 
-Messages have an empty body and two headers:
+Messages have an empty body and the following headers:
 
 | Header        | Value                                                            |
 |---------------|------------------------------------------------------------------|
-| `updateType`  | `EXECUTION_CREATED` \| `EXECUTION_UPDATED` \| `EXECUTION_DELETED` |
+| `updateType`  | `EXECUTION_CREATED` \| `EXECUTION_UPDATED` \| `EXECUTION_DELETED` \| `EXECUTION_FAILED` |
 | `executionId` | identifier of the execution                                      |
+| `error`       | error message, only for `EXECUTION_FAILED`                       |
 
-Messages missing one of these headers are ignored.
+Messages missing the `updateType` or `executionId` header are ignored.
 
 ## WebSocket API
 
@@ -59,6 +60,8 @@ Each outbound text message is a JSON object with the notification headers:
   }
 }
 ```
+
+The `error` header is only present in `EXECUTION_FAILED` notifications.
 
 ## Configuration
 
